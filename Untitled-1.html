@@ -1,0 +1,153 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <style>
+      #googleButton {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 1000;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: white;
+        background-color: #4285F4;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: none; /* Inicialmente oculto */
+      }
+
+      #menuContainer {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        display: none; /* Inicialmente oculto */
+      }
+
+      .menuButton {
+        display: block;
+        margin-bottom: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #333;
+        background-color: #f4f4f4;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .menuButton:hover {
+        background-color: #ddd;
+      }
+
+      #instructionsContent {
+        display: none; /* Inicialmente oculto */
+        margin-top: 10px;
+      }
+
+      .infoBox {
+        position: absolute;
+        padding: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 5px;
+        text-align: center;
+        z-index: 1000;
+      }
+
+      .infoBoxLeft {
+        left: 20px;
+        top: 50%;
+        transform: translate(0, -50%);
+      }
+
+      .infoBoxCenter {
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .infoBoxRight {
+        right: 20px;
+        top: 50%;
+        transform: translate(0, -50%);
+      }
+
+      .arrow {
+        position: absolute;
+        width: 50px;
+        height: 20px;
+        background-color: rgba(255, 255, 255, 0.8);
+        z-index: 1000;
+      }
+
+      .arrowLeft {
+        left: -40px;
+        top: 50%;
+        transform: translateY(-50%);
+        clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+      }
+
+      .arrowRight {
+        right: -40px;
+        top: 50%;
+        transform: translateY(-50%);
+        clip-path: polygon(100% 0%, 0% 50%, 100% 100%);
+      }
+
+      .arrowUp {
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+      }
+    </style>
+  </head>
+  <body>
+    <button id="googleButton" onclick="window.location.href='https://www.google.com';">Ir a Google</button>
+    <div id="menuContainer">
+      <button class="menuButton" onclick="startGame()">Comenzar</button>
+      <button class="menuButton" onclick="toggleInstructions()">Instrucciones</button>
+      <div id="instructionsContent">
+        <p>Bienvenido</p>
+        <p>Con esta aplicación serás capaz de encontrar los diferentes departamentos y las indicaciones para llegar hasta ellos</p>
+        <ol>
+          <li>Escanea con tu teléfono la imagen</li>
+          <li>Dirígete a tu destino siguiendo las flechas</li>
+          <li>Puedes escanear las veces que quieras durante tu camino al destino.</li>
+        </ol>
+      </div>
+    </div>
+    <a-scene mindar-image="imageTargetSrc:https://drive.google.com/uc?id=1I2HSyB6Qkew7V_dsy0zS5FINFFgn5Y7f&export=download; maxTrack: 2" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      <a-assets>
+        <a-asset-item id="robotia" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/band-example/bear/scene.gltf"></a-asset-item>
+        <a-asset-item id="raccoonModel" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/band-example/raccoon/scene.gltf"></a-asset-item>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <a-entity mindar-image-target="targetIndex: 0" id="target0">
+        <a-gltf-model rotation="0 0 0" position="0 -0.25 0" scale="0.05 0.05 0.05" src="#raccoonModel" animation-mixer>
+      </a-entity>
+      <a-entity mindar-image-target="targetIndex: 1" id="target1">
+        <a-gltf-model rotation="0 0 0" position="0 -0.25 0" scale="0.05 0.05 0.05" src="#robotia" animation-mixer>
+      </a-entity>
+    </a-scene>
+
+    <div class="infoBox infoBoxLeft" id="infoBoxLeft">
+      <p>Cafetería, Servicios Escolares, Recursos Financieros</p>
+      <div class="arrow arrowRight"></div>
+    </div>
+    <div class="infoBox infoBoxCenter" id="infoBoxCenter">
+      <p>Centro de Información</p>
+      <div class="arrow arrowUp"></div>
+    </div>
+    <div class="infoBox infoBoxRight" id="infoBoxRight">
+      <p>Dirección, Servicios Escolares</p
